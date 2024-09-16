@@ -58,19 +58,13 @@ function loadQuestions() {
 
 // Avalia as respostas fornecidas pelo usuário
 function submitAnswers() {
+    let score = 0;
     questions.forEach((q, index) => {
         const selectedAnswer = document.querySelector(`input[name="question${index}"]:checked`);
-        const labels = document.querySelectorAll(`input[name="question${index}"]`);
-
-        labels.forEach((label, i) => {
-            const parentLabel = label.parentElement;
-            if (i === q.correctAnswer) {
-                parentLabel.classList.add('correta');
-            }
-            if (selectedAnswer && parseInt(selectedAnswer.value) !== q.correctAnswer && parseInt(selectedAnswer.value) === i) {
-                parentLabel.classList.add('incorreta');
-            }
-        });
+        if (selectedAnswer && parseInt(selectedAnswer.value) === q.correctAnswer) {
+            score++;
+            questions.question 
+        }
     });
     document.getElementById('result').innerHTML = `You scored ${score} out of ${questions.length}`;
 }
