@@ -1,24 +1,47 @@
+
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
     line-height: 1.6;
     background-image: url(https://s2-gshow.glbimg.com/5JtFBZrUEsrgqUgcpf5czbpdCvo=/0x0:2362x1573/2362x1573/i.s3.glbimg.com/v1/AUTH_e84042ef78cb4708aeebdf1c68c6cbd6/internal_photos/bs/2017/Q/D/yYWCxySGm1I5oDXli5kg/tvg-20170424-jm-caldeirao-do-huck-00011-14.jpg);
-    background-repeat:round;
-    color: white;  
+    background-repeat:no-repeat;
+    background-size: auto;
+    color: white;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    label {
+        font-size: 16px;
+    }
+    .right, .wrong {
+        font-size: 14px;
+        padding: 10px;
+    }
 }
 
 #question-container div {
     margin-bottom: 20px;
 }
 
+/* Estilos para as perguntas */
 label {
-    display: block; /* Faz cada resposta aparecer em uma nova linha */
+    display: block;
+    margin-bottom: 5px;
 }
+
 
 .right {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
+    padding: 15px;
+    border-radius: 5px;
 }
 
 
@@ -26,4 +49,18 @@ label {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+
+input[type="radio"], input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+
+@media (min-width: 769px) {
+    .right, .wrong {
+        font-size: 16px;
+    }
 }

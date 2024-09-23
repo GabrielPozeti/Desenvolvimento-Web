@@ -41,36 +41,97 @@ const questions = [
     }
 ];
 
-// Carrega perguntas na página
-function loadQuestions() {
+let currentQuestionIndex = 0;
+let score = 0;
+let timeLeft = 15;
+let timerInterval;
+
+function loadQuestion() {
+    clearInterval(timerInterval);
+    timeLeft = 15;
+
     const questionContainer = document.getElementById('question-container');
-    questions.forEach((q, index) => {
-        const div = document.createElement('div');
-        div.innerHTML = `<h3>${q.question}</h3>`;
-        q.answers.forEach((answer, i) => {
-            div.innerHTML += `<label>
-                <input type="radio" name="question${index}" value="${i}"> ${answer}
-            </label><br>`;
-        });
-        questionContainer.appendChild(div);
-    });
-}
+    questionContainer.innerHTML = '';
 
-// Avalia as respostas fornecidas pelo usuário
-function submitAnswers() {
-    let score = 0;
-    questions.forEach((q, index) => {
-        const selectedAnswer = document.querySelector(`input[name="question${index}"]:checked`);
-        if (selectedAnswer && parseInt(selectedAnswer.value) === q.correctAnswer) {
-            score++;
-            questions.question 
+    const q = questions[currentQuestionIndex];
+    const div = document.createElement('div');
+    div.setAttribute('id', `question${currentQuestionIndex}`);
+    div.innerHTML = `<h3>${q.question}</h3>`;
+
+    q.answers.forEach((answer, i) => {
+        div.innerHTML += `<label>
+            <input type="radio" name="question${currentQuestionIndex}" value="${i}"> ${answer}
+        </label><br>`;
+    });
+
+    questionContainer.appendChild(div);
+
+    const timerDiv = document.getElementById('timer');
+    timerDiv.innerHTML = `Tempo restante: ${timeLeft} segundos`;
+
+    timerInterval = setInterval(function() {
+        timeLeft--;
+        timerDiv.innerHTML = `Tempo restante: ${timeLeft} segundos`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            checkAnswer();
         }
-    });
-    document.getElementById('result').innerHTML = `You scored ${score} out of ${questions.length}`;
+    }, 1000);
 }
 
-function reset(){
+function checkAnswer() {
+    clearInterval(timerInterval);
+
+    const q = questions[currentQuestionIndex];
+    const selectedAnswer = document.querySelector(`input[name="question${currentQuestionIndex}"]:checked`);
+    const questionDiv = document.getElementById(`question${currentQuestionIndex}`);
+
+    questionDiv.classList.remove('right', 'wrong');
+
+    if (selectedAnswer) {
+        const selectedValue = parseInt(selectedAnswer.value);
+        if (selectedValue === q.correctAnswer) {
+            score++;
+            questionDiv.classList.add('right');
+        } else {
+            questionDiv.classList.add('wrong');
+            displayCorrectAnswer(q.correctAnswer);
+        }
+    } else {
+        questionDiv.classList.add('wrong');
+        displayCorrectAnswer(q.correctAnswer);
+    }
+
+    setTimeout(function() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            displayFinalResult();
+        }
+    }, 2000);
+}
+
+function displayCorrectAnswer(correctAnswerIndex) {
+    const correctAnswerText = questions[currentQuestionIndex].answers[correctAnswerIndex];
+    const correctAnswerDiv = document.createElement('div');
+    correctAnswerDiv.style.color = '#155724';
+    correctAnswerDiv.style.fontWeight = 'bold';
+    correctAnswerDiv.innerHTML = `Resposta correta: ${correctAnswerText}`;
+    document.getElementById(`question${currentQuestionIndex}`).appendChild(correctAnswerDiv);
+}
+
+function displayFinalResult() {
+    const questionContainer = document.getElementById('question-container');
+    questionContainer.innerHTML = `Você acertou ${score} de ${questions.length} perguntas.`;
+
+    const timerDiv = document.getElementById('timer');
+    timerDiv.innerHTML = '';
+}
+
+function reset() {
     location.reload();
 }
 
-window.onload = loadQuestions;
+window.onload = loadQuestion;
